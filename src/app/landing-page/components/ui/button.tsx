@@ -1,6 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { motion } from 'framer-motion';
+import { motion, type HTMLMotionProps  } from 'framer-motion';
+
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
@@ -35,14 +36,16 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, isLoading, children, ...props }, ref) => {
+    const motionProps = props as HTMLMotionProps<'button'>; // 👈 Cast to motion-compatible props
+
     return (
       <motion.button
-        className={buttonVariants({ variant, size, className })}
         ref={ref}
+        className={buttonVariants({ variant, size, className })}
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}
         disabled={isLoading}
-        {...props}
+        {...motionProps}
       >
         {isLoading ? (
           <div className="flex items-center gap-2">
@@ -75,7 +78,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
   }
 );
-
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };
